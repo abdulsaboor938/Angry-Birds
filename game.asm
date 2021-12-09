@@ -4,11 +4,13 @@
 mov ax, 0xb800
 mov es,ax
 
+jmp main
+
 ; Code to print splash screen
 splash:
 
 ; code to print bow on desired screen location
-printbow:
+bow:
     push bp
     mov bp, sp
     push ax
@@ -18,8 +20,6 @@ printbow:
 
     mov si, word[bp+4] ; moving the location to si
     mov word[es:si], ax ; base character
-    sub si, 160
-    mov word[es:si], ax
     sub si, 160
     mov word[es:si], ax
     sub si, 160
@@ -59,6 +59,11 @@ background:
     mov ax, 0x2220
     rep stosw
 
+    push 3550
+    call bow
+
+ret
 main:
+    call background
 mov ax, 0x4c00
 int 0x21
