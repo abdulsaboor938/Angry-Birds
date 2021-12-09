@@ -9,6 +9,25 @@ jmp main
 ; Code to print splash screen
 splash:
 
+; code to print score
+score:
+    push bp
+    mov bp, sp
+    push ax
+    push cx
+    push dx
+
+    mov ax, word[bp+4] ; moving the location to si
+    mov ax, 0x0739
+    mov word[es:156], ax
+    mov word[es:158], ax
+
+    pop dx
+    pop cx
+    pop ax
+    pop bp
+ret 2
+
 ; code to add delay to code
 delay:
     push cx
@@ -352,7 +371,6 @@ triangle:
     pop bp
 ret 2
 
-
 ; code to print bow on desired screen location
 bow:
     push bp
@@ -458,6 +476,14 @@ background:
 
     mov word[es:3494],ax
     mov word[es:3174],ax
+
+;print score
+    push ax
+    mov word[es:154], 0x0720
+    mov ax, 0x0739
+    mov word[es:156], ax
+    mov word[es:158], ax
+    pop ax
 
 ret
 
