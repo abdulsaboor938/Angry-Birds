@@ -27,20 +27,20 @@ bird:
     sub si,2
     mov ax, word[es:si]
     and ah, 0xf0
-    or ah, 0xc
+    or ah, 0xe
     mov al, 0xdb
     mov word[es:si], ax
 
     sub si,2
     mov ax, word[es:si]
     and ah, 0xf0
-    or ah, 0xc
+    or ah, 0xe
     mov al, 0xdb
     mov word[es:si], ax
 
     sub si,2
     mov ax, word[es:si]
-    and ah, 0x07
+    and ah, 0xf0
     or ah, 0x00
     mov al, 0x1a
     mov word[es:si], ax
@@ -48,14 +48,14 @@ bird:
     add si, 8
     mov ax, word[es:si]
     and ah, 0xf0
-    or ah, 0xc
+    or ah, 0xe
     mov al, 0xdb
     mov word[es:si], ax
 
     add si, 2
     mov ax, word[es:si]
     and ah, 0xf0
-    or ah, 0xc
+    or ah, 0xe
     mov al, 0xdf
     mov word[es:si], ax
 
@@ -64,21 +64,21 @@ bird:
     sub si, 162
     mov ax, word[es:si]
     and ah, 0xf0
-    or ah, 0xc
+    or ah, 0xe
     mov al, 0xdc
     mov word[es:si], ax
 
     sub si,2
     mov ax, word[es:si]
     and ah, 0xf0
-    or ah, 0xc
+    or ah, 0xe
     mov al, 0x0a
     mov word[es:si], ax
 
     sub si, 2
     mov ax, word[es:si]
     and ah, 0xf0
-    or ah, 0xc
+    or ah, 0xe
     mov al, 0xdc
     mov word[es:si], ax
 
@@ -87,7 +87,7 @@ bird:
     sub si, 158
     mov ax, word[es:si]
     and ah, 0xf0
-    or ah, 0xc
+    or ah, 0x00
     mov al, 0xc2
     mov word[es:si], ax
 
@@ -151,11 +151,14 @@ background:
     push 3550
     call bow
 
-    push 3214
-    call bird
-
 ret
 main:
     call background
+
+; bird movement
+    ; push 3214
+    push 2756
+    call bird
+
 mov ax, 0x4c00
 int 0x21
