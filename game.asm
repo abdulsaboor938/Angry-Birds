@@ -147,6 +147,127 @@ tree:
     pop bp
 ret 2
 
+;code to print dynamic cloud
+d_cloud:
+    push bp
+    mov bp, sp
+    push ax
+    push si
+
+    mov si, word[bp+4] ; moving the location to si
+    sub si,10
+    mov ax, 0xbb08
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+
+
+    sub si, 174
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+
+    sub si, 168
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+
+    pop si
+    pop ax
+    pop bp
+ret 2
+
+; code to print static cloud
+s_cloud:
+    push bp
+    mov bp, sp
+    push ax
+    push si
+
+    mov si, word[bp+4] ; moving the location to si
+    sub si,10
+    mov ax, 0x310a
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+
+
+    sub si, 176
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+
+    sub si, 170
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+
+    pop si
+    pop ax
+    pop bp
+ret 2
+
+
 ; code to print bow on desired screen location
 bow:
     push bp
@@ -196,7 +317,7 @@ background:
     mov cx, 240
     mov ax, 0x2220
     rep stosw
-
+;tree
     push 3404
     call tree
     push 3424
@@ -207,6 +328,18 @@ background:
     call tree
     push 3370
     call tree
+;cloud
+    push 1010
+    call s_cloud
+    push 1140
+    call s_cloud
+    push 1210
+    call s_cloud
+
+    push 1030
+    call d_cloud
+    push 1400
+    call d_cloud
 
     push 3550
     call bow
@@ -247,10 +380,10 @@ loadbird:
 ret
 
 main:
-    mov cx, 4
-    main_loop1:
+    ; mov cx, 4
+    ; main_loop1:
         call loadbird
-        loop main_loop1
+        ; loop main_loop1
 
 mov ax, 0x4c00
 int 0x21
