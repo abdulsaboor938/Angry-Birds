@@ -9,6 +9,20 @@ jmp main
 ; Code to print splash screen
 splash:
 
+; code to add delay to code
+delay:
+    push cx
+    mov cx, 20
+    delay_loop_1:
+        push cx
+        mov cx, 0xffff
+        delay_loop_2:
+        loop delay_loop_2
+        pop cx
+        loop delay_loop_1
+    pop cx
+ret
+
 ; code to print bird on screen
 bird:
     push bp
@@ -55,11 +69,9 @@ bird:
     add si, 2
     mov ax, word[es:si]
     and ah, 0xf0
-    or ah, 0xe
-    mov al, 0xdf
+    or ah, 0x4
+    mov al, 0x10
     mov word[es:si], ax
-
-; first floor
 
     sub si, 162
     mov ax, word[es:si]
@@ -82,8 +94,6 @@ bird:
     mov al, 0xdc
     mov word[es:si], ax
 
-; second floor
-
     sub si, 158
     mov ax, word[es:si]
     and ah, 0xf0
@@ -96,7 +106,6 @@ bird:
     pop bp
 
 ret 2
-
 
 ; code to print bow on desired screen location
 bow:
@@ -140,8 +149,8 @@ ret 2
 
 ; Code block to print background
 background:
-    mov si, 0
-    mov cx, 1761
+    mov di, 0
+    mov cx, 1760
     mov ax, 0x3320
     rep stosw
     mov cx, 240
@@ -152,13 +161,45 @@ background:
     call bow
 
 ret
-main:
-    call background
 
-; bird movement
-    ; push 3214
+loadbird:
+    call delay
+    call background
+    push 3214
+    call bird
+
+    call delay
+    call background
+    push 3058
+    call bird
+
+    call delay
+    call background
+    push 2902
+    call bird
+
+    call delay
+    call background
+    push 2746
+    call bird
+
+    call delay
+    call background
+    push 2590
+    call bird
+
+    call delay
+    call background
     push 2756
     call bird
+
+ret
+
+main:
+    mov cx, 4
+    main_loop1:
+        call loadbird
+        loop main_loop1
 
 mov ax, 0x4c00
 int 0x21
