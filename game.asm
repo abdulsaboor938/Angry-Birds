@@ -107,6 +107,46 @@ bird:
 
 ret 2
 
+;code to print tree
+tree:
+    push bp
+    mov bp, sp
+    push ax
+    push si
+
+    mov ax, 0x6020
+    mov si, word[bp+4] ; moving the location to si
+    mov word[es:si], ax ; base character
+    sub si, 160
+    mov word[es:si], ax
+    sub si, 160
+    mov word[es:si], ax
+    
+    mov ax, 0x2020
+    sub si, 164
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    sub si, 166
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    sub si, 162
+    mov word[es:si], ax
+
+    pop si
+    pop ax
+    pop bp
+ret 2
+
 ; code to print bow on desired screen location
 bow:
     push bp
@@ -156,6 +196,17 @@ background:
     mov cx, 240
     mov ax, 0x2220
     rep stosw
+
+    push 3404
+    call tree
+    push 3424
+    call tree
+    push 3440
+    call tree
+    push 3450
+    call tree
+    push 3370
+    call tree
 
     push 3550
     call bow
