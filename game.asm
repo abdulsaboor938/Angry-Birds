@@ -267,6 +267,91 @@ s_cloud:
     pop bp
 ret 2
 
+;code to print a plank
+plank:
+    push bp
+    mov bp, sp
+    push ax
+    push si
+
+    mov si, word[bp+4] ; moving the location to si
+    sub si,8
+    mov ax, 0x66db
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+
+    pop si
+    pop ax
+    pop bp
+ret 2
+
+; code to print a log
+log:
+    push bp
+    mov bp, sp
+    push ax
+    push si
+
+    mov ax, 0x6020
+    mov si, word[bp+4] ; moving the location to si
+    mov word[es:si], ax ; base character
+    sub si, 160
+    mov word[es:si], ax
+    sub si, 160
+    mov word[es:si], ax
+
+    pop si
+    pop ax
+    pop bp
+ret 2
+
+; code to print a triangle
+triangle:
+    push bp
+    mov bp, sp
+    push ax
+    push si
+
+    mov ax, 0x6020
+    mov si, word[bp+4] ; moving the location to si
+        mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    sub si, 166
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    add si, 2
+    mov word[es:si], ax
+    sub si, 162
+    mov word[es:si], ax
+
+    pop si
+    pop ax
+    pop bp
+ret 2
+
 
 ; code to print bow on desired screen location
 bow:
@@ -343,6 +428,36 @@ background:
 
     push 3550
     call bow
+;obstacle
+    push 3650
+    call plank
+    push 3482
+    call log
+    push 3490
+    call log
+    push 3498
+    call log
+    push 3170
+    call log
+    push 2690
+    call plank
+    push 2690
+    call log
+    push 2206
+    call triangle
+
+;aliens
+    mov ax, 0xba02
+    mov word[es:2526],ax
+    mov word[es:2522],ax
+    mov word[es:2534],ax
+    mov word[es:2538],ax
+
+    mov word[es:3486],ax
+    mov word[es:3166],ax
+
+    mov word[es:3494],ax
+    mov word[es:3174],ax
 
 ret
 
