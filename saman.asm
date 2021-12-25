@@ -10,28 +10,23 @@ jmp main
 splash:
 
 ; code to print score
-scoreprint:
-    pusha
+score:
+    push bp
+    mov bp, sp
+    push ax
+    push cx
+    push dx
 
-    mov ax, word[scorevar] ; reading parameter
-    mov bl, 10 ; dividing
-    div bl
-    push ax ; saving for later use
+    mov ax, word[bp+4] ; moving the location to si
+    mov ax, 0x0739
+    mov word[es:156], ax
+    mov word[es:158], ax
 
-    mov ax, word[es:312]
-    and ah, 0xf0
-    add al, 0x30 ; converting to number
-    mov word[es:312], ax
-
-    pop ax ; retoring ax
-    mov al, ah
-    mov ax, word[es:314]
-    and ah, 0xf0
-    add al, 0x30 ; converting to number
-    mov word[es:314], ax
-
-    popa
-ret
+    pop dx
+    pop cx
+    pop ax
+    pop bp
+ret 2
 
 ; code to add delay to code
 delay:
@@ -433,15 +428,15 @@ background:
     ; end of background
 
 ;tree
-    push 3370
+    push 3404
     call tree
-    push 3408
-    call tree
-    push 3428
+    push 3424
     call tree
     push 3440
     call tree
-    push 3456
+    push 3450
+    call tree
+    push 3370
     call tree
 ;cloud
     push 1010
@@ -491,31 +486,17 @@ background:
     mov word[es:3174],ax
 
 ;print score
-    call scoreprint
+    push ax
+    mov word[es:154], 0x0720
+    mov ax, 0x0739
+    mov word[es:156], ax
+    mov word[es:158], ax
+    pop ax
 
 ret
 
 loadbird:
-    call delay
-    call background
-    push 3214
-    call bird
-
-    call delay
-    call background
-    push 3058
-    call bird
-
-    call delay
-    call background
-    push 2902
-    call bird
-
-    call delay
-    call background
-    push 2746
-    call bird
-
+    throw1:
     call delay
     call background
     push 2590
@@ -523,18 +504,90 @@ loadbird:
 
     call delay
     call background
-    push 2756
+    push 2788
     call bird
 
+    call delay
+    call background
+    push 2986
+    call bird
+
+    call delay
+    call background
+    push 3182
+    call bird
+	
+    ;throw2:
+    call delay
+    call background
+    push 2590
+    call bird
+
+    call delay
+    call background
+    push 2294
+    call bird
+    
+    call delay
+    call background
+    push 2496
+    call bird
+
+    call delay
+    call background
+    push 2698
+    call bird
+
+    ;throw3
+    call delay
+    call background
+    push 2590
+    call bird
+
+    call delay
+    call background
+    push 2280
+    call bird
+
+
+    call delay
+    call background
+    push 2150
+    call bird
+
+    call delay
+    call background
+    push 20100
+    call bird 
+
+    call delay
+    call background
+    push 1520
+    call bird
+
+    call delay
+    call background
+    push 1544
+    call bird
+
+    call delay
+    call background
+    push 1888
+    call bird
+
+    call delay
+    call background
+    push 2698
+    call bird
+
+    
 ret
 
 main:
-    ; mov cx, 4
-    ; main_loop1:
+    mov cx, 4
+    main_loop1:
         call loadbird
-        ; loop main_loop1
+        loop main_loop1
 
 mov ax, 0x4c00
 int 0x21
-
-scorevar: dw 1
