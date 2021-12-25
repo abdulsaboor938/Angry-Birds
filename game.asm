@@ -16,17 +16,17 @@ scoreprint:
     mov ax, word[scorevar] ; reading parameter
     mov bl, 10 ; dividing
     div bl
-    push ax ; saving for later use
+    mov bx, ax
 
     mov ax, word[es:312]
     and ah, 0xf0
+    mov al, bl
     add al, 0x30 ; converting to number
     mov word[es:312], ax
 
-    pop ax ; retoring ax
-    mov al, ah
     mov ax, word[es:314]
     and ah, 0xf0
+    mov al, bh
     add al, 0x30 ; converting to number
     mov word[es:314], ax
 
@@ -420,6 +420,7 @@ ret 2
 
 ; Code block to print background
 background:
+    push a
     ; this code prints cyan color
     mov di, 0
     mov cx, 1760
@@ -492,10 +493,11 @@ background:
 
 ;print score
     call scoreprint
-
+popa
 ret
 
 loadbird:
+    pusha
     call delay
     call background
     push 3214
@@ -525,14 +527,16 @@ loadbird:
     call background
     push 2756
     call bird
+    popa
 
 ret
 
 main:
-    ; mov cx, 4
-    ; main_loop1:
+    mov cx, 4
+    main_loop1:
         call loadbird
-        ; loop main_loop1
+        inc word[scorevar]
+        loop main_loop1
 
 mov ax, 0x4c00
 int 0x21
