@@ -1,3 +1,8 @@
+; Group Members
+; Abdul Saboor 20L-1113
+; Areeba Shafiq 20L-1340
+; Saman Nazir 20L-1318
+
 [org 0x100]
 
 ; code to point es to video base 
@@ -7,113 +12,114 @@ mov es,ax
 jmp main
 
 ; Code to print splash screen
-splash:
-    pusha
-    mov al, 00h
-    mov ah, 0
-    int 10h
+    splash:
+        pusha
+        mov al, 00h
+        mov ah, 0
+        int 10h
 
-    mov cx, 40
-    mov si, 970
-    splashloop1:
-        push cx
+        ; loop to move bird and print background
+        mov cx, 40
+        mov si, 970
+        splashloop1:
+            push cx
+            mov di, 0
+            mov cx, 1000
+            mov ax, 0x2220
+            rep stosw
+            pop cx
+            push si
+            call bird1
+            add si, 2
+            call delay
+            loop splashloop1
+
+
+
+        ; code to print string
+        mov word[es:990], 0xaf41 ; A
+        mov word[es:992], 0xaf4e ; N
+        mov word[es:994], 0xaf47 ; G
+        mov word[es:996], 0xaf52 ; R
+        mov word[es:998], 0xaf59 ; Y
+        mov word[es:1002], 0xaf42 ; B
+        mov word[es:1004], 0xaf49 ; I
+        mov word[es:1006], 0xaf52 ; R
+        mov word[es:1008], 0xaf44 ; D
+        mov word[es:1010], 0xaf53 ; S
+        call delay
+        call delay
+
+        mov ah, 0
+        int 0x16
+
+        mov al, 03h
+        mov ah, 0
+        int 10h
+        popa
+    ret
+
+; you lose function
+    losefunc:
+        pusha
+        mov al, 00h
+        mov ah, 0
+        int 10h
+
+        mov di, 0
+        mov cx, 1000
+        mov ax, 0x4420
+        rep stosw
+
+        ; code to print string
+        mov word[es:990], 0x4f59 ; Y
+        mov word[es:992], 0x4f4f ; O
+        mov word[es:994], 0x4f55 ; U
+        mov word[es:1002], 0x4f4c ; L
+        mov word[es:1004], 0x4f4f ; O
+        mov word[es:1006], 0x4f53 ; S
+        mov word[es:1008], 0x4f45 ; E
+
+        call delay
+        call delay
+        call delay
+        call delay
+
+        mov al, 03h
+        mov ah, 0
+        int 10h
+        popa
+    ret
+; you win function
+    winfunc:
+        pusha
+        mov al, 00h
+        mov ah, 0
+        int 10h
+
         mov di, 0
         mov cx, 1000
         mov ax, 0x2220
         rep stosw
-        pop cx
-        push si
-        call bird1
-        add si, 2
+
+        ; code to print string
+        mov word[es:990], 0x2f59 ; Y
+        mov word[es:992], 0x2f4f ; O
+        mov word[es:994], 0x2f55 ; U
+        mov word[es:1002], 0x2f57 ; W
+        mov word[es:1004], 0x2f49 ; I
+        mov word[es:1006], 0x2f4e ; N
+
         call delay
-        loop splashloop1
+        call delay
+        call delay
+        call delay
 
-
-
-    ; ; code to print string
-    mov word[es:990], 0xaf41 ; A
-    mov word[es:992], 0xaf4e ; N
-    mov word[es:994], 0xaf47 ; G
-    mov word[es:996], 0xaf52 ; R
-    mov word[es:998], 0xaf59 ; Y
-    mov word[es:1002], 0xaf42 ; B
-    mov word[es:1004], 0xaf49 ; I
-    mov word[es:1006], 0xaf52 ; R
-    mov word[es:1008], 0xaf44 ; D
-    mov word[es:1010], 0xaf53 ; S
-    call delay
-    call delay
-
-    mov ah, 0
-    int 0x16
-
-    mov al, 03h
-	mov ah, 0
-	int 10h
-    popa
-ret
-
-; you lose function
-losefunc:
-    pusha
-    mov al, 00h
-    mov ah, 0
-    int 10h
-
-    mov di, 0
-    mov cx, 1000
-    mov ax, 0x4420
-    rep stosw
-
-    ; code to print string
-    mov word[es:990], 0x4f59 ; Y
-    mov word[es:992], 0x4f4f ; O
-    mov word[es:994], 0x4f55 ; U
-    mov word[es:1002], 0x4f4c ; L
-    mov word[es:1004], 0x4f4f ; O
-    mov word[es:1006], 0x4f53 ; S
-    mov word[es:1008], 0x4f45 ; E
-
-    call delay
-    call delay
-    call delay
-    call delay
-
-    mov al, 03h
-	mov ah, 0
-	int 10h
-    popa
-ret
-; you win function
-winfunc:
-    pusha
-    mov al, 00h
-    mov ah, 0
-    int 10h
-
-    mov di, 0
-    mov cx, 1000
-    mov ax, 0x2220
-    rep stosw
-
-    ; code to print string
-    mov word[es:990], 0x2f59 ; Y
-    mov word[es:992], 0x2f4f ; O
-    mov word[es:994], 0x2f55 ; U
-    mov word[es:1002], 0x2f57 ; W
-    mov word[es:1004], 0x2f49 ; I
-    mov word[es:1006], 0x2f4e ; N
-
-    call delay
-    call delay
-    call delay
-    call delay
-
-    mov al, 03h
-	mov ah, 0
-	int 10h
-    popa
-ret
+        mov al, 03h
+        mov ah, 0
+        int 10h
+        popa
+    ret
 
 ; code to print score
     scoreprint:
@@ -291,7 +297,7 @@ ret
         pop cx
     ret
 
-; code to print bird on screen
+; code to print bird
     bird:
         push bp
         mov bp, sp
@@ -375,6 +381,7 @@ ret
 
     ret 2
 
+    ; bird for splash screen
     bird1:
         push bp
         mov bp, sp
@@ -457,7 +464,6 @@ ret
         pop bp
 
     ret 2
-
 
 ; code to print tree
     tree:
@@ -693,7 +699,7 @@ ret
         popa
         ret
 
-; code to print bow on desired screen location
+; code to print bow
     bow:
         push bp
         mov bp, sp
@@ -811,7 +817,7 @@ ret
         mov word[levelvar2], 12
         mov word[levelvar3], 13
 
-        mov word[bp-2], 4 ; local variable to keep tries
+        mov word[bp-2], 11 ; local variable to keep tries
 
         loadloop3:
         dec word[bp-2]
