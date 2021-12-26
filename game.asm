@@ -14,6 +14,9 @@ splash:
         pusha
 
         mov ax, word[scorevar] ; reading parameter
+        cmp ax, 0
+        jz scoreskip
+
         mov bl, 10 ; dividing
         div bl
         mov bx, ax
@@ -29,7 +32,21 @@ splash:
         mov al, bh
         add al, 0x30 ; converting to number
         mov word[es:314], ax
+        jmp scoreend
 
+        scoreskip: ; to skip in case of 0
+            mov ax, word[es:312]
+            and ah, 0xf0
+            mov al, 0
+            add al, 0x30 ; converting to number
+            mov word[es:312], ax
+
+            mov ax, word[es:314]
+            and ah, 0xf0
+            mov al, 0
+            add al, 0x30 ; converting to number
+            mov word[es:314], ax
+        scoreend:
         popa
     ret
 
@@ -55,7 +72,13 @@ splash:
         call background
         push 3182
         call bird
+        mov word[levelvar3], 10
+        mov word[levelvar2], 10
+        mov word[levelvar1], 10
+
     popa
+    add sp, 2
+    jmp win
     ret
 
     throw2:
@@ -79,6 +102,9 @@ splash:
         call background
         push 2698
         call bird
+        mov word[levelvar2], 10
+        mov word[levelvar1], 10
+
     popa
     ret
 
@@ -113,6 +139,9 @@ splash:
         call background
         push 2378
         call bird
+        
+        ; code to update variable
+        mov word[levelvar1], 10
     popa
     ret
 
@@ -692,31 +721,67 @@ splash:
         call background
         push 2756
         call bird
-        popa    
+
+        loadloop1:
+            in al, 0x60
+            cmp al, 30
+            jnz loadloop1        
+
+        call background
+        push 2590
+        call bird
+
+        in al, 0x60
+
+        cmp al, 2
+        jnz load2
+        call throw1
+        jmp loadbird
+
+        load2:
+            cmp al, 3
+            jnz load3
+            call throw2
+            jmp loadbird
+
+        load3:
+            cmp al, 4
+            jnz load4
+            call throw3
+            jmp loadbird
+
+        load4:
+            cmp al, 5
+            jnz loadbird
+            call throw4
+            jmp loadbird
+            
+        win: ; tag to end program
+        popa   
     ret
 
 main:
-    mov cx, 4
-    main_loop1:
-        mov word[levelvar1], 11
-        mov word[levelvar2], 12
-        mov word[levelvar3], 13
+    ; mov cx, 4
+    ; main_loop1:
+    ;     mov word[levelvar1], 11
+    ;     mov word[levelvar2], 12
+    ;     mov word[levelvar3], 13
 
-        call loadbird
-        call throw4
-        call throw3
-        mov word[levelvar1], 10
-        call throw2
-        mov word[levelvar2], 10
-        call throw1
-        mov word[levelvar3], 10
-        inc word[scorevar]
-        loop main_loop1
+    ;     call loadbird
+    ;     call throw4
+    ;     call throw3
+    ;     call throw2
+    ;     call throw1
+    ;     call throw4
+    ;     add word[scorevar], 10
+    ;     loop main_loop1
+    call loadbird
 
 mov ax, 0x4c00
 int 0x21
 
-scorevar: dw 1
+scorevar: dw 00
+tries: dw 10
 
 levelvar1: dw 11
 levelvar2: dw 12
