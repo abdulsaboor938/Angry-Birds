@@ -496,7 +496,9 @@ background:
 ret
 
 loadbird:
-    throw1:
+pusha
+;*****throw one (linear)******
+ 
     call delay
     call background
     push 2590
@@ -517,7 +519,8 @@ loadbird:
     push 3182
     call bird
 	
-    ;throw2:
+;*****throw two ******
+
     call delay
     call background
     push 2590
@@ -538,7 +541,8 @@ loadbird:
     push 2698
     call bird
 
-    ;throw3
+;*****throw three (parabola)******
+
     call delay
     call background
     push 2590
@@ -546,19 +550,8 @@ loadbird:
 
     call delay
     call background
-    push 2280
+    push 1318
     call bird
-
-
-    call delay
-    call background
-    push 2150
-    call bird
-
-    call delay
-    call background
-    push 20100
-    call bird 
 
     call delay
     call background
@@ -579,8 +572,52 @@ loadbird:
     call background
     push 2698
     call bird
+; throw 4 5 dont hit the bricks
+;*****throw four (stretch wider)******
 
-    
+    call delay
+    call background
+    push 2590
+    call bird
+
+    call delay
+    call background
+    push 0690
+    call bird
+
+    call delay
+    call background
+    push 0890
+    call bird
+
+    call delay
+    call background
+    push 0920
+    call bird
+
+    call delay
+    call background
+    push 1600
+    call bird
+
+;*****throw five (stretch slightly)******
+
+    call delay
+    call background
+    push 2590
+    call bird
+
+    call delay
+    call background
+    push 2758
+    call bird
+
+    call delay
+    call background
+    push 3266
+    call bird
+
+popa
 ret
 
 main:
