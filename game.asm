@@ -8,6 +8,67 @@ jmp main
 
 ; Code to print splash screen
 splash:
+; you lose function
+losefunc:
+    pusha
+    mov al, 00h
+    mov ah, 0
+    int 10h
+
+    mov di, 0
+    mov cx, 1000
+    mov ax, 0x4420
+    rep stosw
+
+    ; code to print string
+    mov word[es:990], 0x4f59 ; Y
+    mov word[es:992], 0x4f4f ; O
+    mov word[es:994], 0x4f55 ; U
+    mov word[es:1002], 0x4f4c ; L
+    mov word[es:1004], 0x4f4f ; O
+    mov word[es:1006], 0x4f53 ; S
+    mov word[es:1008], 0x4f45 ; E
+
+    call delay
+    call delay
+    call delay
+    call delay
+
+    mov al, 03h
+	mov ah, 0
+	int 10h
+    popa
+ret
+; you win function
+winfunc:
+    pusha
+    mov al, 00h
+    mov ah, 0
+    int 10h
+
+    mov di, 0
+    mov cx, 1000
+    mov ax, 0x2220
+    rep stosw
+
+    ; code to print string
+    mov word[es:990], 0x2f59 ; Y
+    mov word[es:992], 0x2f4f ; O
+    mov word[es:994], 0x2f55 ; U
+    mov word[es:1002], 0x2f57 ; W
+    mov word[es:1004], 0x2f49 ; I
+    mov word[es:1006], 0x2f4e ; N
+
+    call delay
+    call delay
+    call delay
+    call delay
+
+    mov al, 03h
+	mov ah, 0
+	int 10h
+    popa
+ret
 
 ; code to print score
     scoreprint:
@@ -76,7 +137,6 @@ splash:
         mov word[levelvar2], 10
         mov word[levelvar1], 10
         mov word[scorevar], 29
-        dec word[tries]
 
         popa
         add sp, 2
@@ -107,7 +167,6 @@ splash:
         mov word[levelvar2], 10
         mov word[levelvar1], 10
         mov word[scorevar], 19
-        dec word[tries]
 
     popa
     ret
@@ -146,8 +205,10 @@ splash:
         
         ; code to update variable
         mov word[levelvar1], 10
+        cmp word[scorevar], 0
+        jnz throw3skip
         mov word[scorevar], 9
-        dec word[tries]
+        throw3skip:
 
     popa
     ret
@@ -503,39 +564,6 @@ splash:
         popa
         ret
 
-
-; code to print a triangle
-    triangle:
-        push bp
-        mov bp, sp
-        push ax
-        push si
-
-        mov ax, 0x6020
-        mov si, word[bp+4] ; moving the location to si
-            mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        sub si, 166
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        sub si, 162
-        mov word[es:si], ax
-
-        pop si
-        pop ax
-        pop bp
-    ret 2
-
 ; code to print bow on desired screen location
     bow:
         push bp
@@ -645,12 +673,24 @@ splash:
 
 ; code to load bird on bow
     loadbird:
-        cmp word[tries], 0
-        jnz loadloop3
-        jmp lose
+        push bp
+        mov bp, sp
+        sub sp, 2
+        pusha
+        mov word[scorevar], 0
+        mov word[levelvar1], 11
+        mov word[levelvar2], 12
+        mov word[levelvar3], 13
+
+        mov word[bp-2], 11 ; local variable to keep tries
 
         loadloop3:
-        pusha
+        dec word[bp-2]
+        cmp word[bp-2], 0
+        jnz loadskip
+        jmp lose
+
+        loadskip:
         call delay
         call background
         push 3214
@@ -718,23 +758,37 @@ splash:
             
         win: ; tag to end program
             call background
+            call delay
+            call delay
+            call delay
+            call delay
+            call delay
+            call winfunc
             jmp loadend
 
         lose:
             call background
+            call delay
+            call delay
+            call delay
+            call delay
+            call delay
+            call losefunc
 
         loadend:
-        popa   
+        popa 
+        add sp, 2
+        pop bp  
     ret
 
 main:
     call loadbird
+    jmp main
 
 mov ax, 0x4c00
 int 0x21
 
 scorevar: dw 00
-tries: dw 10
 
 levelvar1: dw 11
 levelvar2: dw 12
