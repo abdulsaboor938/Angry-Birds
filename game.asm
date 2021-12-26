@@ -691,6 +691,7 @@ splash:
 
 ; code to load bird on bow
     loadbird:
+        loadloop3:
         pusha
         call delay
         call background
@@ -731,32 +732,34 @@ splash:
         push 2590
         call bird
 
+        loadloop2:
         in al, 0x60
 
         cmp al, 2
         jnz load2
         call throw1
-        jmp loadbird
+        jmp loadloop3
 
         load2:
             cmp al, 3
             jnz load3
             call throw2
-            jmp loadbird
+            jmp loadloop3
 
         load3:
             cmp al, 4
             jnz load4
             call throw3
-            jmp loadbird
+            jmp loadloop3
 
         load4:
             cmp al, 5
-            jnz loadbird
+            jnz loadloop2
             call throw4
-            jmp loadbird
+            jmp loadloop3
             
         win: ; tag to end program
+            call background
         popa   
     ret
 
