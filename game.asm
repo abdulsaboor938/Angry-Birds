@@ -420,7 +420,7 @@ ret 2
 
 ; Code block to print background
 background:
-    push a
+    pusha
     ; this code prints cyan color
     mov di, 0
     mov cx, 1760
@@ -528,7 +528,7 @@ loadbird:
     push 2756
     call bird
     popa
-
+    
 ret
 
 main:
