@@ -75,10 +75,12 @@ splash:
         mov word[levelvar3], 10
         mov word[levelvar2], 10
         mov word[levelvar1], 10
+        mov word[scorevar], 29
+        dec word[tries]
 
-    popa
-    add sp, 2
-    jmp win
+        popa
+        add sp, 2
+        jmp win
     ret
 
     throw2:
@@ -104,6 +106,8 @@ splash:
         call bird
         mov word[levelvar2], 10
         mov word[levelvar1], 10
+        mov word[scorevar], 19
+        dec word[tries]
 
     popa
     ret
@@ -142,6 +146,9 @@ splash:
         
         ; code to update variable
         mov word[levelvar1], 10
+        mov word[scorevar], 9
+        dec word[tries]
+
     popa
     ret
 
@@ -497,59 +504,6 @@ splash:
         ret
 
 
-; code to print a plank
-    plank:
-        push bp
-        mov bp, sp
-        push ax
-        push si
-
-        mov si, word[bp+4] ; moving the location to si
-        sub si,8
-        mov ax, 0x66db
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-        add si, 2
-        mov word[es:si], ax
-
-        pop si
-        pop ax
-        pop bp
-    ret 2
-
-; code to print a log
-    log:
-        push bp
-        mov bp, sp
-        push ax
-        push si
-
-        mov ax, 0x6020
-        mov si, word[bp+4] ; moving the location to si
-        mov word[es:si], ax ; base character
-        sub si, 160
-        mov word[es:si], ax
-        sub si, 160
-        mov word[es:si], ax
-
-        pop si
-        pop ax
-        pop bp
-    ret 2
-
 ; code to print a triangle
     triangle:
         push bp
@@ -691,6 +645,10 @@ splash:
 
 ; code to load bird on bow
     loadbird:
+        cmp word[tries], 0
+        jnz loadloop3
+        jmp lose
+
         loadloop3:
         pusha
         call delay
@@ -760,24 +718,16 @@ splash:
             
         win: ; tag to end program
             call background
+            jmp loadend
+
+        lose:
+            call background
+
+        loadend:
         popa   
     ret
 
 main:
-    ; mov cx, 4
-    ; main_loop1:
-    ;     mov word[levelvar1], 11
-    ;     mov word[levelvar2], 12
-    ;     mov word[levelvar3], 13
-
-    ;     call loadbird
-    ;     call throw4
-    ;     call throw3
-    ;     call throw2
-    ;     call throw1
-    ;     call throw4
-    ;     add word[scorevar], 10
-    ;     loop main_loop1
     call loadbird
 
 mov ax, 0x4c00
