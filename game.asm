@@ -8,6 +8,51 @@ jmp main
 
 ; Code to print splash screen
 splash:
+    pusha
+    mov al, 00h
+    mov ah, 0
+    int 10h
+
+    mov cx, 40
+    mov si, 970
+    splashloop1:
+        push cx
+        mov di, 0
+        mov cx, 1000
+        mov ax, 0x2220
+        rep stosw
+        pop cx
+        push si
+        call bird1
+        add si, 2
+        call delay
+        loop splashloop1
+
+
+
+    ; ; code to print string
+    mov word[es:990], 0xaf41 ; A
+    mov word[es:992], 0xaf4e ; N
+    mov word[es:994], 0xaf47 ; G
+    mov word[es:996], 0xaf52 ; R
+    mov word[es:998], 0xaf59 ; Y
+    mov word[es:1002], 0xaf42 ; B
+    mov word[es:1004], 0xaf49 ; I
+    mov word[es:1006], 0xaf52 ; R
+    mov word[es:1008], 0xaf44 ; D
+    mov word[es:1010], 0xaf53 ; S
+    call delay
+    call delay
+
+    mov ah, 0
+    int 0x16
+
+    mov al, 03h
+	mov ah, 0
+	int 10h
+    popa
+ret
+
 ; you lose function
 losefunc:
     pusha
@@ -329,6 +374,90 @@ ret
         pop bp
 
     ret 2
+
+    bird1:
+        push bp
+        mov bp, sp
+        push ax
+        push si
+
+        mov si, word[bp+4]
+
+        mov ax, word[es:si]
+        and ah, 0xf0
+        or ah, 0xf
+        mov al, 0xdb
+        mov word[es:si], ax
+
+        sub si,2
+        mov ax, word[es:si]
+        and ah, 0xf0
+        or ah, 0xe
+        mov al, 0xdb
+        mov word[es:si], ax
+
+        sub si,2
+        mov ax, word[es:si]
+        and ah, 0xf0
+        or ah, 0xe
+        mov al, 0xdb
+        mov word[es:si], ax
+
+        sub si,2
+        mov ax, word[es:si]
+        and ah, 0xf0
+        or ah, 0x00
+        mov al, 0x1a
+        mov word[es:si], ax
+
+        add si, 8
+        mov ax, word[es:si]
+        and ah, 0xf0
+        or ah, 0xe
+        mov al, 0xdb
+        mov word[es:si], ax
+
+        add si, 2
+        mov ax, word[es:si]
+        and ah, 0xf0
+        or ah, 0x4
+        mov al, 0x10
+        mov word[es:si], ax
+
+        sub si, 82
+        mov ax, word[es:si]
+        and ah, 0xf0
+        or ah, 0xe
+        mov al, 0xdc
+        mov word[es:si], ax
+
+        sub si,2
+        mov ax, word[es:si]
+        and ah, 0xf0
+        or ah, 0xe
+        mov al, 0x0a
+        mov word[es:si], ax
+
+        sub si, 2
+        mov ax, word[es:si]
+        and ah, 0xf0
+        or ah, 0xe
+        mov al, 0xdc
+        mov word[es:si], ax
+
+        sub si, 78
+        mov ax, word[es:si]
+        and ah, 0xf0
+        or ah, 0x00
+        mov al, 0xc2
+        mov word[es:si], ax
+
+        pop si
+        pop ax
+        pop bp
+
+    ret 2
+
 
 ; code to print tree
     tree:
@@ -682,7 +811,7 @@ ret
         mov word[levelvar2], 12
         mov word[levelvar3], 13
 
-        mov word[bp-2], 11 ; local variable to keep tries
+        mov word[bp-2], 4 ; local variable to keep tries
 
         loadloop3:
         dec word[bp-2]
@@ -764,7 +893,7 @@ ret
             call delay
             call delay
             call winfunc
-            jmp loadend
+            jmp loadbird
 
         lose:
             call background
@@ -774,16 +903,16 @@ ret
             call delay
             call delay
             call losefunc
+            jmp loadbird
 
-        loadend:
         popa 
         add sp, 2
         pop bp  
     ret
 
 main:
+    call splash
     call loadbird
-    jmp main
 
 mov ax, 0x4c00
 int 0x21

@@ -6,7 +6,7 @@ mov es, ax
 jmp main
 
 ; you win function
-winfunc:
+splash:
     pusha
     mov al, 00h
     mov ah, 0
